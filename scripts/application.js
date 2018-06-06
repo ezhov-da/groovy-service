@@ -1,3 +1,5 @@
+Ext.Ajax.timeout = 60000;
+
 Ext.define('Files', {
     extend: 'Ext.data.Model',
     fields: [
