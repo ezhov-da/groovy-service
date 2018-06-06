@@ -30,12 +30,12 @@ var panelFileList = Ext.create('Ext.grid.Panel', {
     },
 });
 
-
 var formCreateRewriteFile = Ext.create('Ext.form.Panel', {
     title: 'Создать/отредактировать файл',
     region: 'east',
-    width: '40%',
+    width: '70%',
     layout: 'border',
+    split: true,
     url: 'insFileSaver.groovy',
     items: [
         {
