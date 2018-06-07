@@ -91,6 +91,13 @@ var basicPanel = Ext.create('Ext.panel.Panel', {
     items: [
         panelFileList,
         formCreateRewriteFile
+    ],
+    tbar: [
+        { xtype: 'tbfill' },
+        {
+            xtype: 'label',
+            html: '<a href="insLogout.groovy">Logout</a>'
+        }
     ]
 });
 
