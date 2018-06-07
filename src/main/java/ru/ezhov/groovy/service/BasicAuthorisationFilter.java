@@ -23,6 +23,15 @@ public class BasicAuthorisationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        doBasicAuth(servletRequest, servletResponse, filterChain);
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+
+    private void doBasicAuth(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String authHeader = ((HttpServletRequest) servletRequest).getHeader("Authorization");
         LOG.info("authHeader: " + authHeader);
         if (authHeader == null) {
@@ -33,20 +42,19 @@ public class BasicAuthorisationFilter implements Filter {
             String lpass = new String(new BASE64Decoder().decodeBuffer(afterClear), "UTF-8");
             LOG.info("lpass: " + lpass);
             String[] arr = lpass.split(":");
-            String login = arr[0];
-            String pass = arr[1];
-            LOG.info("login: [" + login + "] pass:[" + pass + "]");
-            if (!"1".equals(login) && !"1".equals(pass)) {
+            if (arr.length < 2) {
                 errorAuth(((HttpServletResponse) servletResponse));
             } else {
-                filterChain.doFilter(servletRequest, servletResponse);
+                String login = arr[0];
+                String pass = arr[1];
+                LOG.info("login: [" + login + "] pass:[" + pass + "]");
+                if (!"1".equals(login) && !"1".equals(pass)) {
+                    errorAuth(((HttpServletResponse) servletResponse));
+                } else {
+                    filterChain.doFilter(servletRequest, servletResponse);
+                }
             }
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 
     private void errorAuth(HttpServletResponse servletResponse) throws IOException {
