@@ -30,6 +30,26 @@ var panelFileList = Ext.create('Ext.grid.Panel', {
         }
 
     },
+    listeners: {
+        select: function (record, index, eOpts) {
+            console.log(record);
+            console.log(eOpts);
+            var name = record.selected.items[0].data.name;
+            Ext.Ajax.request({
+                url: 'insFileInfo.groovy?name=' + name,
+                method: 'GET',
+                params: {
+                    id: 1
+                },
+                success: function (response) {
+                    var text = response.responseText;
+                    Ext.getCmp('nameFile').setValue(name);
+                    Ext.getCmp('bodyFile').setValue(Ext.decode(text).msg);
+                    console.log(text);
+                },
+            });
+        }
+    }
 });
 
 var formCreateRewriteFile = Ext.create('Ext.form.Panel', {
@@ -44,12 +64,14 @@ var formCreateRewriteFile = Ext.create('Ext.form.Panel', {
             region: 'north',
             fieldLabel: 'Название файла:',
             xtype: 'textfield',
+            id: 'nameFile',
             name: 'name',
             allowBlank: false
         }, {
             region: 'center',
             fieldLabel: 'Текст файла:',
             xtype: 'textarea',
+            id: 'bodyFile',
             name: 'text',
             allowBlank: false
         }, {
@@ -93,7 +115,7 @@ var basicPanel = Ext.create('Ext.panel.Panel', {
         formCreateRewriteFile
     ],
     tbar: [
-        { xtype: 'tbfill' },
+        {xtype: 'tbfill'},
         {
             xtype: 'label',
             html: '<a href="insLogout.groovy">Logout</a>'
