@@ -3,7 +3,9 @@ Ext.Ajax.timeout = 60000;
 Ext.define('Files', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'name', type: 'string'}
+        {name: 'name', type: 'string'},
+        {name: 'size', type: 'int'},
+        {name: 'pathToDownload', type: 'string'},
     ]
 });
 
@@ -24,7 +26,21 @@ var panelFileList = Ext.create('Ext.grid.Panel', {
     store: store,
     columns: {
         items: [
-            {text: 'Файл', dataIndex: 'name'}],
+            {
+                text: 'Файл', dataIndex: 'name'
+            },
+            {
+                text: 'Размер', dataIndex: 'size'
+            },
+            {
+                text: 'Загрузить',
+                dataIndex: 'pathToDownload',
+                renderer: function (value) {
+                    return "<a href='" + value + "'>Загрузить</a>";
+                }
+
+            }
+        ],
         defaults: {
             flex: 1
         }
