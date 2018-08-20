@@ -38,7 +38,6 @@ var panelFileList = Ext.create('Ext.grid.Panel', {
                 renderer: function (value) {
                     return "<a href='" + value + "'>Загрузить</a>";
                 }
-
             }
         ],
         defaults: {
@@ -74,7 +73,6 @@ var formCreateRewriteFile = Ext.create('Ext.form.Panel', {
     width: '70%',
     layout: 'border',
     split: true,
-    url: 'insFileSaver.groovy',
     items: [
         {
             region: 'north',
@@ -98,11 +96,12 @@ var formCreateRewriteFile = Ext.create('Ext.form.Panel', {
     ],
     buttons: [
         {
-            text: 'Выполнить',
+            text: 'Записать',
             formBind: true, //only enabled once the form is valid
             disabled: true,
             handler: function () {
                 var form = formCreateRewriteFile.getForm();
+                form.url = 'insFileSaver.groovy';
                 if (form.isValid()) {
                     form.submit({
                         success: function (form, action) {
@@ -114,7 +113,33 @@ var formCreateRewriteFile = Ext.create('Ext.form.Panel', {
                     });
                 }
             }
-        }]
+        },
+        {
+            text: 'Удалить',
+            formBind: true, //only enabled once the form is valid
+            disabled: true,
+            handler: function () {
+                Ext.MessageBox.confirm('Удалить', 'Вы уверены, что хотите удалить файл?',
+                    function (btn) {
+                        if (btn === 'yes') {
+                            var form = formCreateRewriteFile.getForm();
+                            form.url = 'insDeleteFile.groovy';
+                            if (form.isValid()) {
+                                form.submit({
+                                    success: function (form, action) {
+                                        formCreateRewriteFile.showInfo(form, action);
+                                    },
+                                    failure: function (form, action) {
+                                        formCreateRewriteFile.showInfo(form, action);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                );
+            }
+        }
+    ]
     ,
     showInfo: function (form, action) {
         console.log(action);
